@@ -1,7 +1,9 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-from django.conf.global_settings import STATICFILES_DIRS, DEFAULT_AUTO_FIELD, MEDIA_URL, MEDIA_ROOT
+from django.conf.global_settings import STATICFILES_DIRS, DEFAULT_AUTO_FIELD, MEDIA_URL, MEDIA_ROOT, AUTH_USER_MODEL, \
+    LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL, EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, \
+    EMAIL_USE_TLS, EMAIL_USE_SSL, SERVER_EMAIL
 
 load_dotenv(override=True)
 
@@ -24,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'catalog',
     'blog',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -101,3 +104,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+AUTH_USER_MODEL = 'users.User'
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = 'users:login'
+LOGOUT_REDIRECT_URL = '/'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'email'
+EMAIL_HOST_PASSWORD = 'password'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from catalog.forms import ProductForm
 from catalog.models import Product
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class CatalogListView(ListView):
     model = Product
