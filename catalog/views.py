@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect
 
 from catalog.forms import ProductForm
 from catalog.models import Product
+from catalog.services import get_prod_from_cache, get_products_by_category
 
 
 class CatalogListView(ListView):
@@ -14,7 +15,7 @@ class CatalogListView(ListView):
     paginate_by = 12
 
     def get_queryset(self):
-        return Product.objects.all().order_by('category', 'name')
+        return get_prod_from_cache()
 
 
 class ProductDetailView(DetailView):
@@ -67,3 +68,19 @@ class ProductUnpublishView(LoginRequiredMixin, PermissionRequiredMixin, View):
         product.is_published = False
         product.save()
         return redirect('catalog:prod_detail', pk=product.pk)
+
+class ProductByCategoryView(ListView):
+    """Представление для отображения продуктов в указанной категории."""
+    model = Product
+    template_name = 'catalog/product_by_category.html'
+    context_object_name = 'products'
+    paginate_by = 12
+
+    def get_queryset(self):
+        category_name = self.kwargs.get('category_name')
+        return get_products_by_category(category_name)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category_name'] = self.kwargs.get('category_name')
+        return context

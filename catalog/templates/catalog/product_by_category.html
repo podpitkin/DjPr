@@ -1,0 +1,39 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="album py-5 bg-light">
+    <div class="container">
+        <h1 class="mb-4">Товары в категории: {{ category_name }}</h1>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for product in products %}
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                        <p class="card-text"><strong>Цена:</strong> {{ product.price }} руб.</p>
+                        <p class="card-text"><strong>Категория:</strong> {{ product.category }}</p>
+                        {% if product.image %}
+                        <img src="{{ product.image | media_filter }}" class="card-img-top" alt="{{ product.name }}">
+                        {% endif %}
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="btn-group">
+                                <a href="{% url 'catalog:prod_detail' product.pk %}" class="btn btn-sm btn-outline-secondary">Подробнее</a>
+                                <a href="{% url 'catalog:prod_list' %}" class="btn btn-sm btn-outline-secondary">Все товары</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p>В данной категории товаров пока нет.</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="mt-4">
+            <a href="{% url 'catalog:prod_list' %}" class="btn btn-primary">Назад ко всем товарам</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
