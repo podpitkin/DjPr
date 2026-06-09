@@ -1,0 +1,44 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <p class="card-text">{{ object.name }}</p>
+              <p class="card-text">Описание: {{ object.description }}</p>
+              <p class="card-text">Категория: {{ object.category }}</p>
+              <p class="card-text">Цена: {{ object.price }}</p>
+              <p class="card-text">Дата создания: {{ object.created_at }}</p>
+              <p class="card-text">Дата последнего изменения: {{ object.updated_at }}</p>
+              <p class="card-text">Статус: {% if object.is_published %}Опубликовано{% else %}Не опубликовано{% endif %}</p>
+              <img src="{{ product.image | media_filter }}">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a class="btn btn-primary" href="{% url 'catalog:prod_list' %}" role="button">На главную</a>
+                  <div>
+                        {% if product.owner == request.user %}
+                            <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-primary">Редактировать</a>
+                        {% endif %}
+                        {% if product.owner == request.user or perms.catalog.delete_product %}
+                            <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
+                        {% endif %}
+                        {% if perms.catalog.can_unpublish_product and object.is_published %}
+                            <form method="post" action="{% url 'catalog:product_unpublish' product.pk %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-warning">Отменить публикацию</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
